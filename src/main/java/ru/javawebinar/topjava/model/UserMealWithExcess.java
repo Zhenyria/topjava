@@ -28,12 +28,4 @@ public class UserMealWithExcess {
                 ", excess=" + excess[0] +
                 '}';
     }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public Boolean[] getExcess() {
-        return excess;
-    }
 }
