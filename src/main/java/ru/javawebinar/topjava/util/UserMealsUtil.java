@@ -70,7 +70,7 @@ public class UserMealsUtil {
      */
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesPerDates = meals.stream()
-                .collect(Collectors.groupingBy(x -> x.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)));
+                .collect(Collectors.groupingBy(meal -> meal.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)));
 
         return meals.stream()
                 .filter(meal -> TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime))
@@ -94,12 +94,13 @@ public class UserMealsUtil {
 
         for (UserMeal meal : meals) {
             LocalDate date = meal.getDateTime().toLocalDate();
-            caloriesPerDates.merge(date, meal.getCalories(), Integer::sum);
+            int currentCalories = caloriesPerDates.merge(date, meal.getCalories(), Integer::sum);
 
             AtomicBoolean excess = excessPerDates.compute(date, (k, v) -> {
-                if (v == null)
+                if (v == null) {
                     v = new AtomicBoolean();
-                v.set(caloriesPerDates.get(date) > caloriesPerDay);
+                }
+                v.set(currentCalories > caloriesPerDay);
                 return v;
             });
 
@@ -133,12 +134,13 @@ public class UserMealsUtil {
                     public BiConsumer<List<UserMealWithExcess>, UserMeal> accumulator() {
                         return (result, meal) -> {
                             LocalDate date = meal.getDateTime().toLocalDate();
-                            caloriesPerDates.merge(date, meal.getCalories(), Integer::sum);
+                            int currentCalories = caloriesPerDates.merge(date, meal.getCalories(), Integer::sum);
 
                             AtomicBoolean excess = excessPerDates.compute(date, (k, v) -> {
-                                if (v == null)
+                                if (v == null) {
                                     v = new AtomicBoolean();
-                                v.set(caloriesPerDates.get(date) > caloriesPerDay);
+                                }
+                                v.set(currentCalories > caloriesPerDay);
                                 return v;
                             });
 
@@ -150,15 +152,15 @@ public class UserMealsUtil {
 
                     @Override
                     public BinaryOperator<List<UserMealWithExcess>> combiner() {
-                        return (o, o2) -> {
-                            o.addAll(o2);
-                            return o;
+                        return (list, list1) -> {
+                            list.addAll(list1);
+                            return list;
                         };
                     }
 
                     @Override
                     public Function<List<UserMealWithExcess>, List<UserMealWithExcess>> finisher() {
-                        return (o) -> o;
+                        return (list) -> list;
                     }
 
                     @Override
@@ -167,7 +169,7 @@ public class UserMealsUtil {
                     }
                 };
 
-        return new ArrayList<>(meals.stream()
-                .collect(mealsCollector));
+        return meals.stream()
+                .collect(mealsCollector);
     }
 }

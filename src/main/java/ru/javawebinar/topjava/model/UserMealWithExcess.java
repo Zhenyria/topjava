@@ -33,7 +33,7 @@ public class UserMealWithExcess {
                 "dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", excess=" + excess.get() +
+                ", excess=" + excess +
                 '}';
     }
 }
