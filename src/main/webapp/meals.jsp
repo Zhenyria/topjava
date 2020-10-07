@@ -18,12 +18,12 @@
         <td colspan="2" align="center">Options</td>
     </tr>
 <c:forEach var="meal" items="${meals}">
-    <tr style="color: ${meal.excess == true ? "red" : "green"};">
-        <td><c:out value="${dateFormat.format(meal.dateTime)}"/></td>
-        <td><c:out value="${meal.description}"/></td>
-        <td><c:out value="${meal.calories}"/></td>
-        <td><a href="meals?action=edit&id=<c:out value="${meal.id}"/>">Update</a></td>
-        <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
+    <tr style="color: ${meal.excess ? "red" : "green"};">
+        <td>${dateFormat.format(meal.dateTime)}</td>
+        <td>${meal.description}</td>
+        <td>${meal.calories}</td>
+        <td><a href="meals?action=edit&id=${meal.id}">Update</a></td>
+        <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
     </tr>
 </c:forEach>
 </table>

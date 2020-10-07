@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MealService {
@@ -21,13 +20,14 @@ public interface MealService {
 
     /**
      * create new Meal in database
-     * @return true if create was success, and false if create is failed
+     * @return new Meal
      */
-    boolean create(Meal meal);
+    Meal create(Meal meal);
 
     /**
      * update Meal in database
      * @param meal Meal with updated properties
+     * @return updated Meal or null if Id is not exist
      */
     Meal update(Meal meal);
 

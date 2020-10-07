@@ -1,40 +1,55 @@
 package ru.javawebinar.topjava.repository;
 
+import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.MealService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class MealMapDataBase {
-    private final Map<Long, Meal> mealDb = new HashMap<>();
+import static org.slf4j.LoggerFactory.getLogger;
 
+public class MealMapDataBase implements MealService {
+    private static final Logger log = getLogger(MealMapDataBase.class);
+    private final Map<Long, Meal> mealDb = new ConcurrentHashMap<>();
+    private final AtomicLong idCounter = new AtomicLong(0);
+
+    @Override
     public List<Meal> getAll() {
+        log.debug("return all meals");
         return new ArrayList<>(mealDb.values());
     }
 
+    @Override
     public Meal get(long id) {
+        log.debug("get meal by means of id");
         return mealDb.get(id);
     }
 
-    public void add(Meal meal) {
-        mealDb.put(meal.getId(), meal);
+    @Override
+    public Meal create(Meal meal) {
+        log.debug("create meal");
+        long id = idCounter.getAndIncrement();
+        return mealDb.put(id, new Meal(id, meal.getDateTime(), meal.getDescription(), meal.getCalories()));
     }
 
+    @Override
     public Meal update(Meal meal) {
-        Meal oldMeal = get(meal.getId());
-        Meal newMeal = new Meal(
-                meal.getId(),
-                meal.getDateTime() == null ? oldMeal.getDateTime() : meal.getDateTime(),
-                meal.getDescription() == null ? oldMeal.getDescription() : meal.getDescription(),
-                meal.getCalories() < 0 ? oldMeal.getCalories() : meal.getCalories()
-        );
-        mealDb.put(meal.getId(), newMeal);
-        return newMeal;
+        log.debug("update meal");
+        if (!mealDb.containsKey(meal.getId())) {
+            log.debug("meal is null");
+            return null;
+        }
+        mealDb.put(meal.getId(), meal);
+        return meal;
     }
 
-    public void delete(long id) {
-        mealDb.remove(id);
+    @Override
+    public boolean delete(long id) {
+        log.debug("delete meal");
+        return mealDb.remove(id) != null;
     }
 }
