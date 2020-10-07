@@ -1,10 +1,10 @@
-package ru.javawebinar.topjava.service;
+package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
 
 import java.util.List;
 
-public interface MealService {
+public interface MealDataBase {
 
     /**
      * @return Meal list from database

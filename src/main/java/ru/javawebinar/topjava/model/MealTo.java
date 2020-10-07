@@ -50,6 +50,4 @@ public class MealTo {
     public boolean isExcess() {
         return excess;
     }
-
-
 }

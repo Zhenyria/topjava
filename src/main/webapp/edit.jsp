@@ -8,9 +8,9 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Edit</h2>
-<form method="POST" action='meals?action=edit' name="editMeal">
+<form method="POST" name="editMeal">
     <table>
-        <input type="hidden" name="id" value="${id == null ? -1 : id}"/>
+        <input type="hidden" name="id" value="${meal.id == null ? -1 : id}"/>
         <tr>
             <td>DateTime:</td>
             <td><input type="datetime-local" required="required" name="dateTime" value="${meal.dateTime}"/></td>
@@ -21,9 +21,7 @@
         </tr>
         <tr>
             <td>Calories:</td>
-            <td><input type="text" name="calories" required="required"
-                       title="Для ввода допускается использовать цифры 0-9" pattern="^[0-9]*$"
-                       value="${meal.calories}"/></td>
+            <td><input type="number" name="calories" required="required" pattern="^[0-9]*$" value="${meal.calories}"/></td>
         </tr>
     </table>
     <br/>

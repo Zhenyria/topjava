@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MealMapDataBase implements MealService {
+public class MealMapDataBase implements MealDataBase {
     private static final Logger log = getLogger(MealMapDataBase.class);
     private final Map<Long, Meal> mealDb = new ConcurrentHashMap<>();
     private final AtomicLong idCounter = new AtomicLong(0);
@@ -38,12 +37,13 @@ public class MealMapDataBase implements MealService {
 
     @Override
     public Meal update(Meal meal) {
-        log.debug("update meal");
-        if (!mealDb.containsKey(meal.getId())) {
+        log.debug("try to update meal");
+        Meal oldMeal = mealDb.replace(meal.getId(), meal);
+        if (oldMeal == null) {
             log.debug("meal is null");
             return null;
         }
-        mealDb.put(meal.getId(), meal);
+        log.debug("meal is updated");
         return meal;
     }
 
