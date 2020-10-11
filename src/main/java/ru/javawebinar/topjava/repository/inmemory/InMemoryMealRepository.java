@@ -62,6 +62,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     /**
      * Util method provide unordered Meal List for current user (by means of userId)
+     *
      * @param userId id of current User
      * @return meals list of current User
      */
