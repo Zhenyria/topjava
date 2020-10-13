@@ -6,11 +6,11 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
@@ -44,15 +44,15 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        List<User> users = new ArrayList<>(repository.values());
-        users.sort((user, user1) -> {
-            int compareInt = user.getName().compareTo(user1.getName());
-            if (compareInt == 0) {
-                return user.getEmail().compareTo(user1.getEmail());
-            }
-            return compareInt;
-        });
-        return users;
+        return repository.values().stream()
+                .sorted((user, user1) -> {
+                    int compareInt = user.getName().compareTo(user1.getName());
+                    if (compareInt == 0) {
+                        return user.getEmail().compareTo(user1.getEmail());
+                    }
+                    return compareInt;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

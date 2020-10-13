@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Objects;
@@ -26,10 +28,10 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
-        this.controller = appCtx.getBean(MealRestController.class);
         super.init(config);
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        log.debug("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
+        controller = appCtx.getBean(MealRestController.class);
     }
 
     @Override
@@ -42,7 +44,13 @@ public class MealServlet extends HttpServlet {
                 Integer.parseInt(request.getParameter("calories")));
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        controller.create(meal);
+
+        if (meal.isNew()) {
+            controller.create(meal);
+        } else {
+            controller.update(meal, meal.getId());
+        }
+
         response.sendRedirect("meals");
     }
 
@@ -52,12 +60,17 @@ public class MealServlet extends HttpServlet {
 
         switch (action == null ? "all" : action) {
             case "filter":
+                String startDateStr = request.getParameter("startDate");
+                String endDateStr = request.getParameter("endDate");
+                String startTimeStr = request.getParameter("startTime");
+                String endTimeStr = request.getParameter("endTime");
                 request.setAttribute("meals",
                         controller.getFilterResults(
-                                request.getParameter("startDate"),
-                                request.getParameter("endDate"),
-                                request.getParameter("startTime"),
-                                request.getParameter("endTime")));
+                                startDateStr.isEmpty() ? null : LocalDate.parse(startDateStr),
+                                endDateStr.isEmpty() ? null : LocalDate.parse(endDateStr),
+                                startTimeStr.isEmpty() ? null : LocalTime.parse(startTimeStr),
+                                endTimeStr.isEmpty() ? null : LocalTime.parse(endTimeStr)
+                        ));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "delete":

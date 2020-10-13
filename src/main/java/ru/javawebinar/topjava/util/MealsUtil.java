@@ -27,6 +27,16 @@ public class MealsUtil {
             new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
     );
 
+    public static final List<Meal> secondMeals = Arrays.asList(
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Петин завтрак", 400),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Петин обед", 1100),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Петин ужин", 800),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Петина еда на граничное значение", 900),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Петин завтрак", 350),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Петин обед", 200),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Петин ужин", 400)
+    );
+
     public static List<MealTo> getTos(Collection<Meal> meals, int caloriesPerDay) {
         return filterByPredicate(meals, caloriesPerDay, meal -> true);
     }

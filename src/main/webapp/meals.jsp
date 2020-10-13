@@ -14,9 +14,11 @@
         .excess {
             color: red;
         }
+
         .empty {
             display: none;
         }
+
         .filled {
         }
     </style>
@@ -33,13 +35,13 @@
             <input type="hidden" value="filter" name="action">
             <tr>
                 <td>Date</td>
-                <td>from (inclusive): <input type="date" name="startDate"></td>
-                <td>to (inclusive): <input type="date" name="endDate"></td>
+                <td>from (inclusive): <input type="date" name="startDate" value="${param.startDate}"></td>
+                <td>to (inclusive): <input type="date" name="endDate" value="${param.endDate}"></td>
             </tr>
             <tr>
                 <td>Time</td>
-                <td>from (inclusive): <input type="time" name="startTime"></td>
-                <td>to (inclusive): <input type="time" name="endTime"></td>
+                <td>from (inclusive): <input type="time" name="startTime" value="${param.startTime}"></td>
+                <td>to (inclusive): <input type="time" name="endTime" value="${param.endTime}"></td>
             </tr>
             <tr>
                 <td colspan="3">
