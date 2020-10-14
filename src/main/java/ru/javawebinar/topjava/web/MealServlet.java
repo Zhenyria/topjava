@@ -66,10 +66,10 @@ public class MealServlet extends HttpServlet {
                 String endTimeStr = request.getParameter("endTime");
                 request.setAttribute("meals",
                         controller.getFilterResults(
-                                startDateStr.isEmpty() ? null : LocalDate.parse(startDateStr),
-                                endDateStr.isEmpty() ? null : LocalDate.parse(endDateStr),
-                                startTimeStr.isEmpty() ? null : LocalTime.parse(startTimeStr),
-                                endTimeStr.isEmpty() ? null : LocalTime.parse(endTimeStr)
+                                startDateStr == null || startDateStr.isEmpty() ? null : LocalDate.parse(startDateStr),
+                                endDateStr == null || endDateStr.isEmpty() ? null : LocalDate.parse(endDateStr),
+                                startTimeStr == null || startTimeStr.isEmpty() ? null : LocalTime.parse(startTimeStr),
+                                endTimeStr == null || endTimeStr.isEmpty() ? null : LocalTime.parse(endTimeStr)
                         ));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;

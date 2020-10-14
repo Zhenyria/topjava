@@ -9,7 +9,6 @@ import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
-
 @Service
 public class MealService {
     private MealRepository repository;
@@ -31,11 +30,11 @@ public class MealService {
     }
 
     public List<Meal> getAll(int userId) {
-        return (List<Meal>) repository.getAll(userId);
+        return repository.getAll(userId);
     }
 
     public List<Meal> getFilterResults(int userId, LocalDate startDate, LocalDate endDate) {
-        return (List<Meal>) repository.getFilterResults(userId, startDate, endDate);
+        return repository.getFilterResults(userId, startDate, endDate);
     }
 
     public void update(int userId, Meal meal) {

@@ -41,7 +41,7 @@
             <tr>
                 <td>Time</td>
                 <td>from (inclusive): <input type="time" name="startTime" value="${param.startTime}"></td>
-                <td>to (inclusive): <input type="time" name="endTime" value="${param.endTime}"></td>
+                <td>to (exclusive): <input type="time" name="endTime" value="${param.endTime}"></td>
             </tr>
             <tr>
                 <td colspan="3">
