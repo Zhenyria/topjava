@@ -20,6 +20,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
@@ -66,10 +68,10 @@ public class MealServlet extends HttpServlet {
                 String endTimeStr = request.getParameter("endTime");
                 request.setAttribute("meals",
                         controller.getFilterResults(
-                                startDateStr == null || startDateStr.isEmpty() ? null : LocalDate.parse(startDateStr),
-                                endDateStr == null || endDateStr.isEmpty() ? null : LocalDate.parse(endDateStr),
-                                startTimeStr == null || startTimeStr.isEmpty() ? null : LocalTime.parse(startTimeStr),
-                                endTimeStr == null || endTimeStr.isEmpty() ? null : LocalTime.parse(endTimeStr)
+                                isEmpty(startDateStr) ? null : LocalDate.parse(startDateStr),
+                                isEmpty(endDateStr) ? null : LocalDate.parse(endDateStr),
+                                isEmpty(startTimeStr) ? null : LocalTime.parse(startTimeStr),
+                                isEmpty(endTimeStr) ? null : LocalTime.parse(endTimeStr)
                         ));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
