@@ -18,7 +18,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.concurrent.TimeUnit;
 
@@ -36,13 +35,16 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
     private static final StringBuilder logs = new StringBuilder();
     private static final Logger logger = LoggerFactory.getLogger(MealServiceTest.class);
-    private static final String LOG_FORMAT = "\u001B[32m%s,\tSpent %d microseconds\tTest name: %s\u001B[0m\r\n";
+    private static final String LOG_FORMAT = "\u001B[32m%-30s %s ms\u001B[0m\r\n";
+
+    @Autowired
+    private MealService service;
 
     @Rule
     public final Stopwatch watch = new Stopwatch() {
         @Override
         protected void finished(long nanos, Description description) {
-            String log = String.format(LOG_FORMAT, LocalDateTime.now(), TimeUnit.MICROSECONDS.toMicros(nanos), description.getMethodName());
+            String log = String.format(LOG_FORMAT, description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
             logs.append(log);
             logger.debug(log);
         }
@@ -50,11 +52,8 @@ public class MealServiceTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        logger.debug("TEST SUMMARY\r\n--------------------------------------------------------------------\r\n" + logs);
+        logger.debug("Summary:\r\n" + logs.toString());
     }
-
-    @Autowired
-    private MealService service;
 
     @Test
     public void delete() throws Exception {
