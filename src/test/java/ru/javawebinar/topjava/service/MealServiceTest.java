@@ -1,7 +1,14 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AssumptionViolatedException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Stopwatch;
+import org.junit.rules.TestName;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,6 +33,37 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
+
+    @Rule
+    public final TestName name = new TestName();
+
+    @Rule
+    public final Stopwatch watch = new Stopwatch() {
+        private void log(long nanos, Description description) {
+            log.debug(description.getMethodName() + " " + nanos);
+        }
+
+        @Override
+        protected void succeeded(long nanos, Description description) {
+            log(nanos, description);
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            log(nanos, description);
+        }
+
+        @Override
+        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
+            log(nanos, description);
+        }
+
+        @Override
+        protected void finished(long nanos, Description description) {
+            log(nanos, description);
+        }
+    };
 
     @Autowired
     private MealService service;
