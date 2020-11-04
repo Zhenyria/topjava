@@ -24,9 +24,16 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
             """)
     List<Meal> getBetween(@Param("start_date_time") LocalDateTime startDateTime, @Param("end_date_time") LocalDateTime endDateTime, @Param("user_id") int userId);
 
-    List<Meal> getByUserIdOrderByDateTimeDesc(int userId);
+    @Query("""
+            SELECT m FROM Meal m
+            WHERE m.user.id=:user_id ORDER BY m.dateTime DESC
+            """)
+    List<Meal> getAll(@Param("user_id") int userId);
 
-    boolean existsByIdAndUserId(int id, int userId);
-
-    Meal getByIdAndUserId(int id, int userId);
+    @Query("""
+            SELECT COUNT(1)
+            FROM Meal m
+            WHERE m.id=:id AND m.user.id=:user_id
+            """)
+    int isExist(@Param("id") int id, @Param("user_id") int userId);
 }

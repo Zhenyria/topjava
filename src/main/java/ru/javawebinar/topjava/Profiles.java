@@ -10,6 +10,8 @@ public class Profiles {
             POSTGRES_DB = "postgres",
             HSQL_DB = "hsqldb";
 
+    public static final String REPOSITORY_IMPLEMENTATION = DATAJPA;
+
     //  Get DB profile depending of DB driver in classpath
     public static String getActiveDbProfile() {
         try {
