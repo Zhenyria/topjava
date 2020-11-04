@@ -1,11 +1,15 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class DataJpaUserRepository implements UserRepository {
@@ -42,7 +46,17 @@ public class DataJpaUserRepository implements UserRepository {
         return crudRepository.findAll(SORT_NAME_EMAIL);
     }
 
+    @Transactional
+    @Override
     public User getWithMeals(int id) {
-        return crudRepository.getWithMeals(id);
+        User user = get(id);
+        if (user == null) {
+            return null;
+        }
+        user.setMeals(
+                (List<Meal>) user.getMeals().stream()
+                        .map(Hibernate::unproxy)
+                        .collect(Collectors.toList()));
+        return user;
     }
 }

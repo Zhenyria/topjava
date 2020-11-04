@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
@@ -23,8 +25,18 @@ public class DataJpaMealRepository implements MealRepository {
     @Transactional
     @Override
     public Meal save(Meal meal, int userId) {
-        meal.setUser(userRepository.getOne(userId));
-        return meal.isNew() || mealRepository.isExist(meal.getId(), userId) > 0 ? mealRepository.save(meal) : null;
+        if (meal.isNew()) {
+            meal.setUser(userRepository.getOne(userId));
+            return mealRepository.save(meal);
+        }
+        Meal currentMeal = get(meal.getId(), userId);
+        if (currentMeal == null) {
+            return null;
+        }
+        currentMeal.setDateTime(meal.getDateTime());
+        currentMeal.setCalories(meal.getCalories());
+        currentMeal.setDescription(meal.getDescription());
+        return currentMeal;
     }
 
     @Override
@@ -34,8 +46,10 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = mealRepository.findById(id).orElse(null);
-        return meal == null || meal.getUser().getId() != userId ? null : meal;
+        return mealRepository
+                .findById(id)
+                .filter(m -> m.getId() == id && m.getUser().getId() == userId)
+                .orElse(null);
     }
 
     @Override
@@ -46,5 +60,16 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return mealRepository.getBetween(startDateTime, endDateTime, userId);
+    }
+
+    @Transactional
+    @Override
+    public Meal getWithUser(int id, int userId) {
+        Meal meal = get(id, userId);
+        if (meal == null) {
+            return null;
+        }
+        meal.setUser((User) Hibernate.unproxy(meal.getUser()));
+        return meal;
     }
 }
