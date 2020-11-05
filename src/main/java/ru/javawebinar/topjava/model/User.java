@@ -78,7 +78,7 @@ public class User extends AbstractNamedEntity {
         setRoles(roles);
     }
 
-    public List getMeals() {
+    public List<Meal> getMeals() {
         return meals;
     }
 

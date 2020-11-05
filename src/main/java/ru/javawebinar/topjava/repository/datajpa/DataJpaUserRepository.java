@@ -8,6 +8,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,17 +48,14 @@ public class DataJpaUserRepository implements UserRepository {
         return crudRepository.findAll(SORT_NAME_EMAIL);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public User getWithMeals(int id) {
         User user = get(id);
         if (user == null) {
             return null;
         }
-        user.setMeals(
-                (List<Meal>) user.getMeals().stream()
-                        .map(Hibernate::unproxy)
-                        .collect(Collectors.toList()));
+        user.getMeals().sort((m1, m2) -> m2.getDateTime().compareTo(m1.getDateTime()));
         return user;
     }
 }

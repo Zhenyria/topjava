@@ -36,6 +36,7 @@ public class DataJpaMealRepository implements MealRepository {
         currentMeal.setDateTime(meal.getDateTime());
         currentMeal.setCalories(meal.getCalories());
         currentMeal.setDescription(meal.getDescription());
+        mealRepository.save(currentMeal);
         return currentMeal;
     }
 
@@ -48,7 +49,7 @@ public class DataJpaMealRepository implements MealRepository {
     public Meal get(int id, int userId) {
         return mealRepository
                 .findById(id)
-                .filter(m -> m.getId() == id && m.getUser().getId() == userId)
+                .filter(m -> m.getUser().getId() == userId)
                 .orElse(null);
     }
 
@@ -62,7 +63,7 @@ public class DataJpaMealRepository implements MealRepository {
         return mealRepository.getBetween(startDateTime, endDateTime, userId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Meal getWithUser(int id, int userId) {
         Meal meal = get(id, userId);
