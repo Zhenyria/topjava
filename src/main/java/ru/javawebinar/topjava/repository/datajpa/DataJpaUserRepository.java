@@ -48,14 +48,8 @@ public class DataJpaUserRepository implements UserRepository {
         return crudRepository.findAll(SORT_NAME_EMAIL);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public User getWithMeals(int id) {
-        User user = get(id);
-        if (user == null) {
-            return null;
-        }
-        user.getMeals().sort((m1, m2) -> m2.getDateTime().compareTo(m1.getDateTime()));
-        return user;
+        return crudRepository.getWithMeals(id);
     }
 }
