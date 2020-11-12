@@ -45,7 +45,7 @@ public class Meal extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
+    //@NotNull
     private User user;
 
     public Meal() {
@@ -105,10 +105,10 @@ public class Meal extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Meal{" +
-                "id=" + id +
-                ", dateTime=" + dateTime +
-                ", description='" + description + '\'' +
-                ", calories=" + calories +
-                '}';
+               "id=" + id +
+               ", dateTime=" + dateTime +
+               ", description='" + description + '\'' +
+               ", calories=" + calories +
+               '}';
     }
 }

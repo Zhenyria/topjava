@@ -13,6 +13,10 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -27,11 +31,13 @@ public class JdbcUserRepository implements UserRepository {
      * Special Extractors for extracting users with their roles from resultSet
      * after sql-request of type "user JOIN INNER user_roles"
      */
-    private static final ResultSetExtractor<Map<String, User>> RESULT_SET_EXTRACTOR =
+    private static final ResultSetExtractor<Map<String, User>> resultSetExtractor =
             resultSet -> getMapForExtractor(resultSet, "id");
 
-    private static final ResultSetExtractor<Map<String, User>> RESULT_SET_EXTRACTOR_WITH_EMAIL =
+    private static final ResultSetExtractor<Map<String, User>> resultSetExtractorForEmail =
             resultSet -> getMapForExtractor(resultSet, "email");
+
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -52,6 +58,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     @Transactional
     public User save(User user) {
+        validate(user);
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
@@ -81,7 +88,7 @@ public class JdbcUserRepository implements UserRepository {
     public User get(int id) {
         Map<String, User> users = jdbcTemplate.query(
                 "SELECT * FROM users u INNER JOIN user_roles ur ON u.id=ur.user_id AND u.id=?",
-                RESULT_SET_EXTRACTOR, id);
+                resultSetExtractor, id);
 
         return users != null ? users.get(String.valueOf(id)) : null;
     }
@@ -90,7 +97,7 @@ public class JdbcUserRepository implements UserRepository {
     public User getByEmail(String email) {
         Map<String, User> users = jdbcTemplate.query(
                 "SELECT * FROM users u INNER JOIN user_roles ur ON u.id = ur.user_id WHERE u.email=? ORDER BY u.name, u.email",
-                RESULT_SET_EXTRACTOR_WITH_EMAIL, email);
+                resultSetExtractorForEmail, email);
 
         return users != null ? users.get(email) : null;
     }
@@ -98,7 +105,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         Map<String, User> users = jdbcTemplate.query(
-                "SELECT * FROM users u INNER JOIN user_roles ur ON u.id = ur.user_id", RESULT_SET_EXTRACTOR);
+                "SELECT * FROM users u INNER JOIN user_roles ur ON u.id = ur.user_id", resultSetExtractor);
 
         if (users == null || users.size() <= 0) {
             return Collections.emptyList();
@@ -143,5 +150,12 @@ public class JdbcUserRepository implements UserRepository {
             }
         }
         return users;
+    }
+
+    private void validate(User user) {
+        Set<ConstraintViolation<User>> validateViolations = validator.validate(user);
+        if (validateViolations.size() > 0) {
+            throw new ConstraintViolationException(validateViolations);
+        }
     }
 }
