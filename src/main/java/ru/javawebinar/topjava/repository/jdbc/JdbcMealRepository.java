@@ -12,21 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.validate;
 
 @Repository
 @Transactional(readOnly = true)
 public class JdbcMealRepository implements MealRepository {
 
     private static final RowMapper<Meal> rowMapper = BeanPropertyRowMapper.newInstance(Meal.class);
-
-    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -92,12 +87,5 @@ public class JdbcMealRepository implements MealRepository {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
                 rowMapper, userId, startDateTime, endDateTime);
-    }
-
-    private void validate(Meal meal) {
-        Set<ConstraintViolation<Meal>> validateViolations = validator.validate(meal);
-        if (validateViolations.size() > 0) {
-            throw new ConstraintViolationException(validateViolations);
-        }
     }
 }

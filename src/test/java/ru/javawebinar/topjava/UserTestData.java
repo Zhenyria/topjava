@@ -3,10 +3,7 @@ package ru.javawebinar.topjava;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
@@ -15,13 +12,19 @@ public class UserTestData {
 
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
+    public static final int USER_WITHOUT_ROLES_ID = ADMIN_ID + 10;
     public static final int NOT_FOUND = 10;
 
     public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", Role.USER);
     public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ADMIN, Role.USER);
+    public static final User userWithoutRoles = new User(USER_WITHOUT_ROLES_ID, "Piter", "piter@gmail.com", "piterPass", 1900, false, new Date(), Collections.emptySet());
 
     public static User getNew() {
-        return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
+        return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), List.of(Role.USER, Role.USER));
+    }
+
+    public static User getNewWithoutRoles() {
+        return new User(null, "Piter", "piter@gmail.com", "piterPass", 1900, false, new Date(), Collections.emptySet());
     }
 
     public static User getUpdated() {
@@ -35,9 +38,9 @@ public class UserTestData {
         return updated;
     }
 
-    public static User getWithChangedRole() {
+    public static User getUpdatedWithoutRoles() {
         User updated = getUpdated();
-        updated.setRoles(Collections.singletonList(Role.ADMIN));
+        updated.setRoles(Collections.emptySet());
         return updated;
     }
 
@@ -52,7 +55,7 @@ public class UserTestData {
         Set<Role> roles = new HashSet<>();
         roles.add(Role.ADMIN);
         roles.add(Role.USER);
-        updated.setRoles(new HashSet<Role>(roles));
+        updated.setRoles(roles);
         return updated;
     }
 }

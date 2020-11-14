@@ -17,6 +17,7 @@ import ru.javawebinar.topjava.ActiveDbProfileResolver;
 import ru.javawebinar.topjava.TimingRules;
 
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.Profiles.JDBC;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 
 @ContextConfiguration({
@@ -27,12 +28,11 @@ import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 abstract public class AbstractServiceTest {
+    @ClassRule
+    public static ExternalResource summary = TimingRules.SUMMARY;
 
     @Autowired
     private Environment environment;
-
-    @ClassRule
-    public static ExternalResource summary = TimingRules.SUMMARY;
 
     @Rule
     public Stopwatch stopwatch = TimingRules.STOPWATCH;
@@ -49,6 +49,6 @@ abstract public class AbstractServiceTest {
     }
 
     protected boolean isJdbcTest() {
-        return environment.acceptsProfiles(Profiles.of("jdbc"));
+        return environment.acceptsProfiles(Profiles.of(JDBC));
     }
 }
