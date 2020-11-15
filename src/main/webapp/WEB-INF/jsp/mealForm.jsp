@@ -8,7 +8,7 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <br>
 <section>
-    <h2><spring:message code="${param.id == null ? 'meal_edit.save_title' : 'meal_edit.edit_title'}"/></h2>
+    <h2><spring:message code="${meal.isNew() ? 'meal_edit.save_title' : 'meal_edit.edit_title'}"/></h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">

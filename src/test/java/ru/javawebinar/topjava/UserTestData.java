@@ -3,7 +3,9 @@ package ru.javawebinar.topjava;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
@@ -20,7 +22,7 @@ public class UserTestData {
     public static final User userWithoutRoles = new User(USER_WITHOUT_ROLES_ID, "Piter", "piter@gmail.com", "piterPass", 1900, false, new Date(), Collections.emptySet());
 
     public static User getNew() {
-        return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), List.of(Role.USER, Role.USER));
+        return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), List.of(Role.USER, Role.ADMIN));
     }
 
     public static User getNewWithoutRoles() {
@@ -52,10 +54,7 @@ public class UserTestData {
 
     public static User getWithNewRole() {
         User updated = new User(user);
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.ADMIN);
-        roles.add(Role.USER);
-        updated.setRoles(roles);
+        updated.setRoles(List.of(Role.ADMIN, Role.USER));
         return updated;
     }
 }

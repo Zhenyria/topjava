@@ -16,10 +16,7 @@ import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.validate;
 
@@ -31,7 +28,7 @@ public class JdbcUserRepository implements UserRepository {
      * Special Extractor for extracting users with their roles from resultSet
      * after sql-request of type "user JOIN INNER user_roles"
      */
-    private static final ResultSetExtractor<List<User>> resultSetExtractor = JdbcUserRepository::getMapForExtractor;
+    private static final ResultSetExtractor<List<User>> resultSetExtractor = JdbcUserRepository::extractResults;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -119,13 +116,14 @@ public class JdbcUserRepository implements UserRepository {
                 });
     }
 
-    private static List<User> getMapForExtractor(ResultSet rs) throws SQLException {
-        List<User> users = new ArrayList<>();
-        for (int i = 0; rs.next(); i++) {
+    private static List<User> extractResults(ResultSet rs) throws SQLException {
+        Map<Integer, User> users = new LinkedHashMap<>();
+        while (rs.next()) {
             int id = rs.getInt("id");
+            User user = users.get(id);
             String role = rs.getString("role");
-            if (role == null) {
-                users.add(new User(
+            if (user == null) {
+                users.put(id, new User(
                         id,
                         rs.getString("name"),
                         rs.getString("email"),
@@ -133,28 +131,15 @@ public class JdbcUserRepository implements UserRepository {
                         rs.getInt("calories_per_day"),
                         rs.getBoolean("enabled"),
                         rs.getDate("registered"),
-                        Collections.emptySet()));
-                continue;
-            }
-            Role newRole = Role.valueOf(role);
-            if (i > 0 && users.get(i - 1).getId() == id) {
-                User user = users.get(i - 1);
-                Set<Role> roles = user.getRoles();
-                roles.add(newRole);
-                user.setRoles(roles);
-                i--;
+                        role == null ? Collections.emptySet() : Set.of(Role.valueOf(role))));
             } else {
-                users.add(new User(
-                        id,
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getInt("calories_per_day"),
-                        rs.getBoolean("enabled"),
-                        rs.getDate("registered"),
-                        Set.of(newRole)));
+                if (role != null) {
+                    Set<Role> roles = user.getRoles();
+                    roles.add(Role.valueOf(role));
+                    user.setRoles(roles);
+                }
             }
         }
-        return users;
+        return new ArrayList<>(users.values());
     }
 }

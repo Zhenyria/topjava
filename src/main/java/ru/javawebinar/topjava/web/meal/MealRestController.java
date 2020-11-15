@@ -10,43 +10,35 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
-
 @Controller
 public class MealRestController extends AbstractMealController {
 
     public MealRestController(MealService service) {
-        super(service);
+        super(service, MealRestController.class);
     }
 
     public Meal get(int id) {
-        log.info("get meal {} for user {}", id, authUserId());
         return super.get(id);
     }
 
     public void delete(int id) {
-        log.info("delete meal {} for user {}", id, authUserId());
         super.delete(id);
     }
 
     public List<MealTo> getAll() {
-        log.info("getAll for user {}", authUserId());
         return super.getAll();
     }
 
     public Meal create(Meal meal) {
-        log.info("create {} for user {}", meal, authUserId());
         return super.create(meal);
     }
 
     public void update(Meal meal, int id) {
-        log.info("update {} for user {}", meal, authUserId());
         super.update(meal, id);
     }
 
     public List<MealTo> getBetween(@Nullable LocalDate startDate, @Nullable LocalTime startTime,
                                    @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
-        log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, authUserId());
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
