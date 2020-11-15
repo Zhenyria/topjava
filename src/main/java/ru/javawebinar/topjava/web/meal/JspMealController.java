@@ -20,7 +20,7 @@ import java.time.temporal.ChronoUnit;
 public class JspMealController extends AbstractMealController {
 
     public JspMealController(MealService service) {
-        super(service, JspMealController.class);
+        super(service);
     }
 
     @GetMapping()

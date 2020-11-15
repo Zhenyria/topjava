@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -23,6 +24,8 @@ import static ru.javawebinar.topjava.util.ValidationUtil.validate;
 @Repository
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
+
+    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
     /**
      * Special Extractor for extracting users with their roles from resultSet
@@ -54,7 +57,6 @@ public class JdbcUserRepository implements UserRepository {
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
-            saveRoles(user.getRoles(), user.getId());
         } else {
             if (namedParameterJdbcTemplate.update("""
                        UPDATE users SET name=:name, email=:email, password=:password,
@@ -63,9 +65,9 @@ public class JdbcUserRepository implements UserRepository {
                 return null;
             } else {
                 deleteRoles(user.getId());
-                saveRoles(user.getRoles(), user.getId());
             }
         }
+        saveRoles(user.getRoles(), user.getId());
         return user;
     }
 
@@ -121,21 +123,19 @@ public class JdbcUserRepository implements UserRepository {
         while (rs.next()) {
             int id = rs.getInt("id");
             User user = users.get(id);
-            String role = rs.getString("role");
+            String strRole = rs.getString("role");
+            Role role = strRole == null ? null : Role.valueOf(strRole);
             if (user == null) {
-                users.put(id, new User(
-                        id,
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getInt("calories_per_day"),
-                        rs.getBoolean("enabled"),
-                        rs.getDate("registered"),
-                        role == null ? Collections.emptySet() : Set.of(Role.valueOf(role))));
+                users.put(id, ROW_MAPPER.mapRow(rs, rs.getRow()));
+                if (role != null) {
+                    users.get(id).setRoles(Set.of(role));
+                } else {
+                    users.get(id).setRoles(Collections.emptySet());
+                }
             } else {
                 if (role != null) {
                     Set<Role> roles = user.getRoles();
-                    roles.add(Role.valueOf(role));
+                    roles.add(role);
                     user.setRoles(roles);
                 }
             }

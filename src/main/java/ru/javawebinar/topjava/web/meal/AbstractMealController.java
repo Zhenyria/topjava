@@ -18,13 +18,12 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 public abstract class AbstractMealController {
-    protected final Logger log;
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     protected final MealService service;
 
-    public AbstractMealController(MealService service, Class<? extends AbstractMealController> clazz) {
+    public AbstractMealController(MealService service) {
         this.service = service;
-        this.log = LoggerFactory.getLogger(clazz);
     }
 
     public Meal get(int id) {
