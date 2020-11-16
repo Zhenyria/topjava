@@ -126,19 +126,19 @@ public class JdbcUserRepository implements UserRepository {
             String strRole = rs.getString("role");
             Role role = strRole == null ? null : Role.valueOf(strRole);
             if (user == null) {
-                users.put(id, ROW_MAPPER.mapRow(rs, rs.getRow()));
-                if (role != null) {
-                    users.get(id).setRoles(Set.of(role));
-                } else {
-                    users.get(id).setRoles(Collections.emptySet());
+                user = ROW_MAPPER.mapRow(rs, rs.getRow());
+                users.put(id, user);
+            }
+            Set<Role> roles = user.getRoles();
+            if (role != null) {
+                if (roles == null) {
+                    roles = Set.of(role);
                 }
-            } else {
-                if (role != null) {
-                    Set<Role> roles = user.getRoles();
+                else {
                     roles.add(role);
-                    user.setRoles(roles);
                 }
             }
+            user.setRoles(roles);
         }
         return new ArrayList<>(users.values());
     }
