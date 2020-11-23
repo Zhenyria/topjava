@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,9 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.formatters.DateFormat;
+import ru.javawebinar.topjava.util.formatters.TimeFormat;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -55,22 +57,10 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping("/filter")
-    public List<MealTo> getBetweenDateTime(@RequestParam(name = "start_date", required = false)
-                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                                   LocalDateTime startDate,
-                                           @RequestParam(name = "start_time", required = false)
-                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                                   LocalDateTime startTime,
-                                           @RequestParam(name = "end_date", required = false)
-                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                                   LocalDateTime endDate,
-                                           @RequestParam(name = "end_time", required = false)
-                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                                   LocalDateTime endTime) {
-        return super.getBetween(
-                startDate == null ? null : startDate.toLocalDate(),
-                startTime == null ? null : startTime.toLocalTime(),
-                endDate == null ? null : endDate.toLocalDate(),
-                endTime == null ? null : endTime.toLocalTime());
+    public List<MealTo> getBetweenDateTime(@RequestParam(name = "start_date", required = false) @DateFormat LocalDate startDate,
+                                           @RequestParam(name = "start_time", required = false) @TimeFormat LocalTime startTime,
+                                           @RequestParam(name = "end_date", required = false) @DateFormat LocalDate endDate,
+                                           @RequestParam(name = "end_time", required = false) @TimeFormat LocalTime endTime) {
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }

@@ -401,10 +401,86 @@
           <con:request/>
           <con:originalUri>http://localhost/topjava/resources/css/style.css</con:originalUri>
           <con:credentials>
+            <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
             <con:authType>No Authorization</con:authType>
           </con:credentials>
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:parameters/>
+        </con:request>
+      </con:method>
+    </con:resource>
+    <con:resource name="fillter" path="/topjava/rest/meals/filter" id="86a74346-c620-4228-8980-25e121020375">
+      <con:settings/>
+      <con:parameters/>
+      <con:method name="Method 1" id="abbf56fd-ffd9-4c98-9012-ce9462c3490c" method="GET">
+        <con:settings/>
+        <con:parameters>
+          <con:parameter required="true">
+            <con:name>start_time</con:name>
+            <con:value/>
+            <con:style>QUERY</con:style>
+            <con:default/>
+          </con:parameter>
+          <con:parameter required="true">
+            <con:name>start_date</con:name>
+            <con:value/>
+            <con:style>QUERY</con:style>
+            <con:default/>
+          </con:parameter>
+          <con:parameter required="true">
+            <con:name>end_time</con:name>
+            <con:value/>
+            <con:style>QUERY</con:style>
+            <con:default/>
+          </con:parameter>
+          <con:parameter required="true">
+            <con:name>end_date</con:name>
+            <con:value/>
+            <con:style>QUERY</con:style>
+            <con:default/>
+          </con:parameter>
+        </con:parameters>
+        <con:representation type="FAULT">
+          <con:mediaType>text/html;charset=utf-8</con:mediaType>
+          <con:status>400 500</con:status>
+          <con:params/>
+          <con:element>html</con:element>
+        </con:representation>
+        <con:representation type="RESPONSE">
+          <con:mediaType>application/json;charset=UTF-8</con:mediaType>
+          <con:status>200</con:status>
+          <con:params/>
+          <con:element>Response</con:element>
+        </con:representation>
+        <con:representation type="RESPONSE">
+          <con:mediaType xsi:nil="true"/>
+          <con:status>0</con:status>
+          <con:params/>
+          <con:element>data</con:element>
+        </con:representation>
+        <con:request name="Request 1" id="5db19562-fa40-4861-bb38-aeca555d97e5" mediaType="application/json">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          </con:settings>
+          <con:endpoint>http://localhost:8080</con:endpoint>
+          <con:request/>
+          <con:originalUri>http://localhost/topjava/rest/meals/fillter</con:originalUri>
+          <con:credentials>
+            <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+            <con:authType>No Authorization</con:authType>
+          </con:credentials>
+          <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:parameters>
+            <con:entry key="start_time" value="2000-01-01T13:00:00"/>
+            <con:entry key="startDate" value="2020-01-30T00:00:00"/>
+            <con:entry key="start_date" value="2020-01-31T00:00:00"/>
+          </con:parameters>
+          <con:parameterOrder>
+            <con:entry>start_date</con:entry>
+            <con:entry>start_time</con:entry>
+            <con:entry>end_date</con:entry>
+            <con:entry>end_time</con:entry>
+          </con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
