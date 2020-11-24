@@ -83,17 +83,17 @@ public class MealTo {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || obj.getClass() != getClass()) {
-            return false;
-        }
         if (this == obj) {
             return true;
         }
+        if (!(obj instanceof MealTo)) {
+            return false;
+        }
         MealTo mealTo = (MealTo) obj;
-        return mealTo.id.equals(id) &&
-               mealTo.dateTime.compareTo(dateTime) == 0 &&
-               mealTo.description.equals(description) &&
-               mealTo.calories == calories &&
-               mealTo.excess == excess;
+        return excess == mealTo.excess &&
+               Objects.equals(id, mealTo.id) &&
+               Objects.equals(calories, mealTo.calories) &&
+               Objects.equals(description, mealTo.description) &&
+               Objects.equals(dateTime, mealTo.dateTime);
     }
 }

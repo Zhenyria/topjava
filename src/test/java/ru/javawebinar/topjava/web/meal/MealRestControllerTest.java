@@ -11,6 +11,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -71,7 +73,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         Meal meal = getUpdated();
-        perform(MockMvcRequestBuilders.post(REST_URL + MEAL1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(meal)))
                 .andExpect(status().isNoContent());
@@ -87,5 +89,18 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_TO_MATCHER.contentJson(mealTo7, mealTo6));
+    }
+
+    @Test
+    void getBetweenDateTimeWithAllParameters() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter")
+                .param("start_date", "2020-01-31")
+                .param("start_time", "13:00:00")
+                .param("end_date", "2020-01-31")
+                .param("end_time", "20:00:00"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(List.of(mealTo6)));
     }
 }
