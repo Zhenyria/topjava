@@ -31,7 +31,7 @@ public class TestMatcher<T> {
 
     public void assertMatch(T actual, T expected) {
         if (fieldsToIgnore.length == 0) {
-            assertThat(actual).isEqualTo(expected);
+            assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
         } else {
             assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
         }
@@ -39,7 +39,7 @@ public class TestMatcher<T> {
 
     public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
         if (fieldsToIgnore.length == 0) {
-            assertThat(actual).isEqualTo(expected);
+            assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
         } else {
             assertThat(actual).usingElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
         }

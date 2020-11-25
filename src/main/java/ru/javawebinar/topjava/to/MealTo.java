@@ -86,13 +86,13 @@ public class MealTo {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof MealTo)) {
+        if (obj == null || obj.getClass() != getClass()) {
             return false;
         }
         MealTo mealTo = (MealTo) obj;
         return excess == mealTo.excess &&
+               calories == mealTo.calories &&
                Objects.equals(id, mealTo.id) &&
-               Objects.equals(calories, mealTo.calories) &&
                Objects.equals(description, mealTo.description) &&
                Objects.equals(dateTime, mealTo.dateTime);
     }
