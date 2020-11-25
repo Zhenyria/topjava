@@ -9,20 +9,21 @@ import static ru.javawebinar.topjava.TestUtil.readListFromJsonMvcResult;
 
 public class TestMatcher<T> {
     private final Class<T> clazz;
+    private final boolean isUseEqual;
     private final String[] fieldsToIgnore;
 
-    public TestMatcher(Class<T> clazz) {
+    private TestMatcher(Class<T> clazz, boolean isUseEqual, String... fieldsToIgnore) {
         this.clazz = clazz;
-        this.fieldsToIgnore = new String[0];
-    }
-
-    private TestMatcher(Class<T> clazz, String... fieldsToIgnore) {
-        this.clazz = clazz;
+        this.isUseEqual = isUseEqual;
         this.fieldsToIgnore = fieldsToIgnore;
     }
 
+    public static <T> TestMatcher<T> usingEquals(Class<T> clazz) {
+        return new TestMatcher<>(clazz, true);
+    }
+
     public static <T> TestMatcher<T> usingIgnoringFieldsComparator(Class<T> clazz, String... fieldsToIgnore) {
-        return new TestMatcher<>(clazz, fieldsToIgnore);
+        return new TestMatcher<>(clazz, false, fieldsToIgnore);
     }
 
     public void assertMatch(Iterable<T> actual, T... expected) {
@@ -30,16 +31,16 @@ public class TestMatcher<T> {
     }
 
     public void assertMatch(T actual, T expected) {
-        if (fieldsToIgnore.length == 0) {
-            assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+        if (isUseEqual) {
+            assertThat(actual).isEqualTo(expected);
         } else {
             assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
         }
     }
 
     public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
-        if (fieldsToIgnore.length == 0) {
-            assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+        if (isUseEqual) {
+            assertThat(actual).isEqualTo(expected);
         } else {
             assertThat(actual).usingElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
         }

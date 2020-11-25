@@ -8,7 +8,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.util.MealsUtil.createTo;
 
 public class MealToTestData {
-    public static final TestMatcher<MealTo> MEAL_TO_MATCHER = new TestMatcher<>(MealTo.class);
+    public static final TestMatcher<MealTo> MEAL_TO_MATCHER = TestMatcher.usingEquals(MealTo.class);
 
     public static final MealTo mealTo1 = createTo(meal1, false);
     public static final MealTo mealTo2 = createTo(meal2, false);
