@@ -1,10 +1,11 @@
 var ctx;
+var curUrl = "admin/users/";
 
 // $(document).ready(function () {
 $(function () {
     // https://stackoverflow.com/a/5064235/548473
     ctx = {
-        ajaxUrl: "admin/users/",
+        ajaxUrl: curUrl,
         datatableApi: $("#datatable").DataTable({
             "paging": false,
             "info": true,
@@ -43,3 +44,11 @@ $(function () {
     };
     makeEditable();
 });
+
+function setEnabled(id, checked) {
+    $.ajax({
+        type: "POST",
+        url: curUrl + id,
+        data: {enabled: checked}
+    }).done(updateTable());
+}
