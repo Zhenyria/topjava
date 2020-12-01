@@ -38,4 +38,8 @@ public class DateTimeUtil {
     public static @Nullable LocalTime parseLocalTime(@Nullable String str) {
         return StringUtils.hasText(str) ? LocalTime.parse(str) : null;
     }
+
+    public static @Nullable LocalDateTime parseLocalDateTime(@Nullable String str) {
+        return StringUtils.hasText(str) ? LocalDateTime.parse(str) : null;
+    }
 }
