@@ -34,7 +34,7 @@
     </div>
     <div class="card-footer text-right mt-3">
         <button class="btn btn-danger" onclick="resetFilter()"><spring:message code="common.cancel"/></button>
-        <button class="btn btn-primary" onclick="filter()"><spring:message code="meal.filter"/></button>
+        <button class="btn btn-primary" onclick="updateFilteredTable()"><spring:message code="meal.filter"/></button>
     </div>
 </div>
 <div class="jumbotron pt-4">

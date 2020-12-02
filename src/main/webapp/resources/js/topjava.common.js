@@ -1,6 +1,8 @@
-var form;
+var form, updateTable;
 
-function makeEditable() {
+function makeEditable(upTable) {
+    updateTable = upTable;
+
     form = $('#detailsForm');
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -31,12 +33,6 @@ function updateTableByData(data) {
     ctx.datatableApi.clear().rows.add(data).draw();
 }
 
-function updateTable() {
-    $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
-}
-
 function save() {
     $.ajax({
         type: "POST",
@@ -44,7 +40,7 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        filter();
+        updateTable();
         successNoty("Saved");
     });
 }

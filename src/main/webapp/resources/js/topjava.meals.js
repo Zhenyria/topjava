@@ -1,9 +1,8 @@
-var curUrl = "ajax/meals/";
 var ctx;
 
 $(function () {
     ctx = {
-        ajaxUrl: curUrl,
+        ajaxUrl: "ajax/meals/",
         datatableApi: $("#datatable").DataTable({
             "paging": false,
             "info": true,
@@ -34,18 +33,18 @@ $(function () {
             ]
         })
     };
-    makeEditable();
+    makeEditable(updateFilteredTable);
 });
 
-function filter() {
+function updateFilteredTable() {
     $.ajax({
         type: "GET",
-        url: curUrl + "filter",
+        url: ctx.ajaxUrl + "filter",
         data: $("#filter").serialize()
     }).done(updateTableByData);
 }
 
 function resetFilter() {
     $("#filter")[0].reset();
-    $.get(curUrl, updateTable);
+    $.get(ctx.ajaxUrl, updateFilteredTable());
 }

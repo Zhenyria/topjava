@@ -1,11 +1,10 @@
 var ctx;
-var curUrl = "admin/users/";
 
 // $(document).ready(function () {
 $(function () {
     // https://stackoverflow.com/a/5064235/548473
     ctx = {
-        ajaxUrl: curUrl,
+        ajaxUrl: "admin/users/",
         datatableApi: $("#datatable").DataTable({
             "paging": false,
             "info": true,
@@ -42,13 +41,21 @@ $(function () {
             ]
         })
     };
-    makeEditable();
+    makeEditable(function () {
+        $.get(ctx.ajaxUrl, updateTableByData)
+    });
 });
 
-function setEnabled(id, checked) {
+function setEnabled(checkbox, id) {
+    var enabled = checkbox.is(":checked")
     $.ajax({
         type: "POST",
-        url: curUrl + id,
-        data: {enabled: checked}
-    }).done(updateTable());
+        url: ctx.ajaxUrl + id,
+        data: {enabled: enabled}
+    }).done(function () {
+        checkbox.closest("tr").attr("data-userEnabled", enabled);
+        successNoty(enabled ? "User enabled" : "User disabled");
+    }).fail(function () {
+        $(checkbox).prop("checked", !enabled);
+    });
 }

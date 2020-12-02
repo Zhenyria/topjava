@@ -59,7 +59,7 @@ public class UserService {
         User user = get(id);
         if (user.isEnabled() != enabled) {
             user.setEnabled(enabled);
-            update(user);
+            repository.save(user);
         }
     }
 

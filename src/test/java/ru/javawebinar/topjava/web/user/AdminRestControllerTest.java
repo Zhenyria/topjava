@@ -12,6 +12,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -34,6 +36,14 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHER.contentJson(admin));
+    }
+
+    @Test
+    void getWithMeals() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/with-meals/" + USER_ID))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_WITH_MEALS_MATCHER.contentJson(user));
     }
 
     @Test
@@ -64,6 +74,14 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void enable() throws Exception {
+        Base64.Encoder encoder = Base64.getEncoder();
+        String encoding = encoder.encodeToString((ADMIN_LOGIN + ":" + ADMIN_PASSWORD).getBytes());
+        enableTesting(false, encoding);
+        enableTesting(true, encoding);
+    }
+
+    @Test
     void createWithLocation() throws Exception {
         User newUser = UserTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -84,5 +102,15 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHER.contentJson(admin, user));
+    }
+
+    private void enableTesting(boolean enable, String encoding) throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + USER_ID)
+                .header("Authorization", "Basic" + encoding)
+                .param("enabled", enable ? "true" : "false")
+                .contentType(MediaType.ALL))
+                .andExpect(status().isNoContent());
+
+        USER_MATCHER.assertMatch(userService.get(USER_ID), enable ? user : getDisabled());
     }
 }

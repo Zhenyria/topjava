@@ -17,6 +17,11 @@ public class ProfileRestController extends AbstractUserController {
         return super.get(authUserId());
     }
 
+    @GetMapping(value = "/with-meals", produces = MediaType.APPLICATION_JSON_VALUE)
+    public User getWithMeals() {
+        return super.getWithMeals(authUserId());
+    }
+
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete() {
