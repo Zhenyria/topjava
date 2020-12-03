@@ -46,5 +46,5 @@ function updateFilteredTable() {
 
 function resetFilter() {
     $("#filter")[0].reset();
-    $.get(ctx.ajaxUrl, updateFilteredTable());
+    $.get(ctx.ajaxUrl, updateTableByData);
 }
