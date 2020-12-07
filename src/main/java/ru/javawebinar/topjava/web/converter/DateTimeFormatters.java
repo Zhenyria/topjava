@@ -3,8 +3,10 @@ package ru.javawebinar.topjava.web.converter;
 import org.springframework.format.Formatter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
@@ -34,6 +36,21 @@ public class DateTimeFormatters {
         @Override
         public String print(LocalTime lt, Locale locale) {
             return lt.format(DateTimeFormatter.ISO_LOCAL_TIME);
+        }
+    }
+
+    public static class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
+
+        @Override
+        public LocalDateTime parse(String text, Locale locale) {
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm[:ss]");
+            TemporalAccessor temporal = format.parseBest(text, LocalDateTime::from, LocalDateTime::from);
+            return (LocalDateTime) temporal;
+        }
+
+        @Override
+        public String print(LocalDateTime ldt, Locale locale) {
+            return ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         }
     }
 }
