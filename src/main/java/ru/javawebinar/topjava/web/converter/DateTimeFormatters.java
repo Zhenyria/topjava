@@ -43,7 +43,7 @@ public class DateTimeFormatters {
 
         @Override
         public LocalDateTime parse(String text, Locale locale) {
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm[:ss]");
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm[:ss]");
             TemporalAccessor temporal = format.parseBest(text, LocalDateTime::from, LocalDateTime::from);
             return (LocalDateTime) temporal;
         }

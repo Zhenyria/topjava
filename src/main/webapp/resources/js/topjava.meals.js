@@ -13,10 +13,26 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
+$.ajaxSetup({
+    converters: {
+        "text json": function (str) {
+            var json = JSON.parse(str);
+            $(json).each(function () {
+                this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
+            });
+            return json;
+        }
+    }
+});
+
 $(function () {
     ctx = {
         ajaxUrl: mealAjaxUrl,
         datatableApi: $("#datatable").DataTable({
+            "ajax": {
+                "url": mealAjaxUrl,
+                "dataSrc": ""
+            },
             "paging": false,
             "info": true,
             "columns": [
@@ -59,4 +75,56 @@ $(function () {
         updateTable: updateFilteredTable
     };
     makeEditable();
+
+    $.datetimepicker.setLocale(localeCode);
+
+    var startDate = $('#startDate');
+    var endDate = $('#endDate');
+    startDate.datetimepicker({
+        format: 'Y-m-d',
+        formatDate: 'Y-m-d',
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: endDate.val() ? endDate.val() : false
+            })
+        },
+        timepicker: false
+    });
+    endDate.datetimepicker({
+        format: 'Y-m-d',
+        formatDate: 'Y-m-d',
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: startDate.val() ? startDate.val() : false
+            })
+        },
+        timepicker: false
+    });
+
+    var startTime = $('#startTime');
+    var endTime = $('#endTime');
+    startTime.datetimepicker({
+        format: 'H:i',
+        formatTime: 'H:i',
+        onShow: function (ct) {
+            this.setOptions({
+                minTime: endTime.val() ? endTime.val() : false
+            })
+        },
+        datepicker: false
+    });
+    endTime.datetimepicker({
+        format: 'H:i',
+        formatTime: 'H:i',
+        onShow: function (ct) {
+            this.setOptions({
+                minTime: startTime.val() ? startTime.val() : false
+            })
+        },
+        datepicker: false
+    });
+
+    $('#dateTime').datetimepicker({
+        format: 'Y-m-d H:i'
+    });
 });
