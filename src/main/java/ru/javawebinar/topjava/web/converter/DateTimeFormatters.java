@@ -6,11 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
+import static ru.javawebinar.topjava.util.DateTimeUtil.*;
 
 public class DateTimeFormatters {
     public static class LocalDateFormatter implements Formatter<LocalDate> {
@@ -43,14 +41,12 @@ public class DateTimeFormatters {
 
         @Override
         public LocalDateTime parse(String text, Locale locale) {
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm[:ss]");
-            TemporalAccessor temporal = format.parseBest(text, LocalDateTime::from, LocalDateTime::from);
-            return (LocalDateTime) temporal;
+            return LocalDateTime.parse(text, DATE_TIME_FORMATTER);
         }
 
         @Override
         public String print(LocalDateTime ldt, Locale locale) {
-            return ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            return ldt.format(DATE_TIME_FORMATTER);
         }
     }
 }

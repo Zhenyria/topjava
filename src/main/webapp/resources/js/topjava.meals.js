@@ -18,7 +18,7 @@ $.ajaxSetup({
         "text json": function (str) {
             var json = JSON.parse(str);
             $(json).each(function () {
-                this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
+                this.dateTime = this.dateTime.substring(0, 10) + " " + this.dateTime.substring(11, 16);
             });
             return json;
         }
@@ -38,12 +38,6 @@ $(function () {
             "columns": [
                 {
                     "data": "dateTime",
-                    "render": function (date, type, row) {
-                        if (type === "display") {
-                            return date.substring(0, 10) + " " + date.substring(11, 16);
-                        }
-                        return date;
-                    }
                 },
                 {
                     "data": "description"
@@ -108,7 +102,7 @@ $(function () {
         formatTime: 'H:i',
         onShow: function (ct) {
             this.setOptions({
-                minTime: endTime.val() ? endTime.val() : false
+                maxTime: endTime.val() ? endTime.val() : false
             })
         },
         datepicker: false
