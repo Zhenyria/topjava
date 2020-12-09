@@ -17,10 +17,13 @@ $.ajaxSetup({
     converters: {
         "text json": function (str) {
             var json = JSON.parse(str);
-            $(json).each(function () {
-                this.dateTime = this.dateTime.substring(0, 10) + " " + this.dateTime.substring(11, 16);
-            });
-            return json;
+            try {
+                $(json).each(function () {
+                    this.dateTime = this.dateTime.substring(0, 10) + " " + this.dateTime.substring(11, 16);
+                });
+            } finally {
+                return json;
+            }
         }
     }
 });
