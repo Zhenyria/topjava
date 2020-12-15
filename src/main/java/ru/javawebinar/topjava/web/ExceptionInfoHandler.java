@@ -60,6 +60,14 @@ public class ExceptionInfoHandler {
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, errorType == DATA_ERROR ? "User with this email already exists" : rootCause.getMessage());
+        String errorMsg = rootCause.getMessage();
+        if (errorType == DATA_ERROR) {
+            if (errorMsg.contains("(user_id, date_time)")) {
+                errorMsg = "Meal with this date and time already exists";
+            } else {
+                errorMsg = "User with this email already exists";
+            }
+        }
+        return new ErrorInfo(req.getRequestURL(), errorType, errorMsg);
     }
 }

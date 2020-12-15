@@ -62,7 +62,7 @@ public class ProfileUIController extends AbstractUserController {
     }
 
     private String getResultForDuplicateEmailError(BindingResult result) {
-        result.rejectValue("email", "exception.DATA_ERROR");
+        result.rejectValue("email", "exception.DUPLICATE_EMAIL");
         return "profile";
     }
 }
