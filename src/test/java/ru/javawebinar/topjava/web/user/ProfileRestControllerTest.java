@@ -78,6 +78,26 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void registerWithInvalidData() throws Exception {
+        UserTo newTo = new UserTo(null, "newName", "", "newPassword", 0);
+        perform(MockMvcRequestBuilders.post(REST_URL + "/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newTo)))
+                .andDo(print())
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void updateWithInvalidData() throws Exception {
+        UserTo updatedTo = new UserTo(null, "newName", "", "newPassword", 0);
+        perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andDo(print())
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     void getWithMeals() throws Exception {
         assumeDataJpa();
         perform(MockMvcRequestBuilders.get(REST_URL + "/with-meals")

@@ -97,6 +97,28 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateWithInvalidData() throws Exception {
+        Meal updated = getUpdated();
+        updated.setCalories(null);
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(user)))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void createWithInvalidData() throws Exception {
+        Meal newMeal = getNew();
+        newMeal.setCalories(null);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newMeal))
+                .with(userHttpBasic(user)))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
                 .with(userHttpBasic(user)))

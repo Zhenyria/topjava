@@ -92,10 +92,28 @@ class AdminRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
-                .content(JsonUtil.writeValue(updated)))
+                .content(jsonWithPassword(updated, updated.getPassword())))
                 .andExpect(status().isNoContent());
 
         USER_MATCHER.assertMatch(userService.get(USER_ID), updated);
+    }
+
+    @Test
+    void updateWithInvalidData() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(JsonUtil.writeValue(UserTestData.getUpdated())))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void createWithInvalidData() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(JsonUtil.writeValue(UserTestData.getNew())))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
