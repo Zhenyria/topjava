@@ -2,10 +2,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <nav class="navbar navbar-dark bg-dark py-0">
     <div class="container">
-        <a href="meals" class="navbar-brand"><img src="resources/images/icon-meal.png"> <spring:message code="app.title"/></a>
+        <a href="meals" class="navbar-brand"><img src="resources/images/icon-meal.png"> <spring:message
+                code="app.title"/></a>
         <sec:authorize access="isAuthenticated()">
             <form:form class="form-inline my-2" action="logout" method="post">
                 <sec:authorize access="hasRole('ADMIN')">
@@ -26,5 +28,11 @@
                 </button>
             </form:form>
         </sec:authorize>
+        <a class="dropdown-toggle nav-link my-1 ml-2" data-toggle="dropdown"
+           aria-expanded="false">${ctx.response.locale}</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" id="enLocale" href="?lang=en">English</a>
+            <a class="dropdown-item" id="ruLocale" href="?lang=ru">Русский</a>
+        </div>
     </div>
 </nav>
