@@ -74,12 +74,6 @@
         <property name="defaultLocale" value="ru"/>
     </bean>
 
-
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/webapp/WEB-INF/jsp/"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>
-
     <mvc:interceptors>
         <bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>
         <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
