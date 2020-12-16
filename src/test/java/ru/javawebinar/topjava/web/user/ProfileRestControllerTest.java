@@ -113,7 +113,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @Test
     void updateWithDuplicateEmail() throws Exception {
-        UserTo updated = new UserTo(100000, "newName", "admin@gmail.com", "newPassword", 1500);
+        UserTo updated = new UserTo(USER_ID, "newName", "admin@gmail.com", "newPassword", 1500);
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
