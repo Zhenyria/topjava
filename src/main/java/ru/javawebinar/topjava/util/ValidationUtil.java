@@ -6,9 +6,7 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ValidationUtil {
 
@@ -78,9 +76,9 @@ public class ValidationUtil {
         return result;
     }
 
-    public static List<String> getMessageOfBindingResult(BindingResult result) {
+    public static String[] getMessagesOfBindingResult(BindingResult result) {
         return result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                .collect(Collectors.toList());
+                .toArray(String[]::new);
     }
 }
