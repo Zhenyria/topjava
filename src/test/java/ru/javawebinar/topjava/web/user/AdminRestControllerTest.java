@@ -106,7 +106,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(JsonUtil.writeValue(UserTestData.getUpdated())))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -115,7 +115,8 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(JsonUtil.writeValue(UserTestData.getNew())))
-                .andExpect(status().isInternalServerError());
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Transactional(propagation = Propagation.NEVER)
