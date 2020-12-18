@@ -34,7 +34,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle my-1 ml-2" data-toggle="dropdown" aria-haspopup="true"
-                   aria-expanded="false" id="locale">${pageContext.response.locale}</a>
+                   aria-expanded="false" id="locale"></a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" id="enLocale"
                        href="${requestScope['javax.servlet.forward.request_uri']}?lang=en">English</a>
@@ -45,3 +45,7 @@
         </ul>
     </div>
 </nav>
+<script>
+    var locale = "${pageContext.response.locale}";
+    $("#locale").text(locale);
+</script>

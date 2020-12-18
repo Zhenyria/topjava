@@ -21,7 +21,7 @@ $.ajaxSetup({
     converters: {
         "text json": function (stringData) {
             var json = JSON.parse(stringData);
-            if (typeof json === 'object') {
+            if (stringData.includes("dateTime")) {
                 $(json).each(function () {
                     this.dateTime = this.dateTime.substr(0, 16).replace('T', ' ');
                 });
@@ -66,24 +66,11 @@ $(function () {
     });
 
 //  http://xdsoft.net/jqplugins/datetimepicker/
-    $.datetimepicker.setLocale($("#locale").getText());
+    $.datetimepicker.setLocale(locale);
 
     var startDate = $('#startDate');
     var endDate = $('#endDate');
     startDate.datetimepicker({
-        i18n: {
-            ru: {
-                months: [
-                    'Январь', 'Февраль', 'Март', 'Апрель',
-                    'Май', 'Июнь', 'Июль', 'Август',
-                    'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
-                ],
-                dayOfWeek: [
-                    "Вс", "Пн", "Вт", "Ср",
-                    "Чт", "Пт", "Сб",
-                ]
-            }
-        },
         timepicker: false,
         format: 'Y-m-d',
         formatDate: 'Y-m-d',
@@ -94,19 +81,6 @@ $(function () {
         }
     });
     endDate.datetimepicker({
-        i18n: {
-            ru: {
-                months: [
-                    'Январь', 'Февраль', 'Март', 'Апрель',
-                    'Май', 'Июнь', 'Июль', 'Август',
-                    'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
-                ],
-                dayOfWeek: [
-                    "Вс", "Пн", "Вт", "Ср",
-                    "Чт", "Пт", "Сб",
-                ]
-            }
-        },
         timepicker: false,
         format: 'Y-m-d',
         formatDate: 'Y-m-d',

@@ -95,7 +95,7 @@ function successNoty(key) {
 
 function failNoty(jqXHR) {
     closeNoty();
-    var errorInfo = JSON.parse(jqXHR.responseText);
+    var errorInfo = jqXHR.responseJSON;
     var errorDetail = "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" +
         (errorInfo.type === "DATA_ERROR" ? "" : (i18n["exception." + errorInfo.type] + "<br>"));
     $.each(errorInfo.detail, function (index, value) {
